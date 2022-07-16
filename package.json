@@ -1,0 +1,19 @@
+{
+  "name": "chess-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "developer-mode": "npx nodemon server.js"
+  },
+  "author": "Will Shedden",
+  "license": "ISC",
+  "dependencies": {
+    "chess.js": "^0.13.3",
+    "express": "^4.18.1",
+    "jquery": "^3.6.0",
+    "nodemon": "^2.0.19"
+  }
+}
