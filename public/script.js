@@ -4,3 +4,4 @@ var config = {
     dropOffBoard: "snapback",
 }
 var board = Chessboard('board', config);
+var socket = io.connect('http://localhost:3000');
