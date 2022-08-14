@@ -21,8 +21,8 @@ function socketSetup(game) {
   io.on("connection", (socket) => {
     console.log("Connected with id", socket.id);
     socket.on("move", (move) => {
-      makeMove(move, game);
-      socket.emit("boardUpdate", game.fen(), true);
+      let valid = makeMove(move, game);
+      socket.emit("boardUpdate", game.fen(), valid);
     });
 
     socket.on("opponentMoveRequest", () => {
@@ -50,4 +50,5 @@ setup();
 
 
 //TODO: handle multiple boards
-//TODO: stop it from automatically making a move if it's not your turn
+//DONE TODO: stop it from automatically making a move if it's not your turn
+//TODO: handle checkmate

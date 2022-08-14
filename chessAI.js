@@ -52,6 +52,14 @@ function alphabeta(chess, depth, alpha, beta, isMaximizing){
 
 function getScoreEstimate(chess) {
     // Count material advantage
+    if(chess.in_checkmate()) {
+        if(chess.turn() === 'w') {
+            return -Infinity;
+        } else {
+            return Infinity;
+        }
+    }
+
     let score = 0;
     for (let i = 0; i < chess.board().length; i++) {
         for (let j = 0; j < chess.board()[i].length; j++) {

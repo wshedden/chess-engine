@@ -12,12 +12,19 @@ function onDrop(source, target) {
   return "";
 }
 
+function onDragStart(source, piece, position, orientation) {
+    if(piece[0] === 'b') {
+        return false;
+    }
+}
+
 function setup() {
   var config = {
     position: "start",
     draggable: true,
     dropOffBoard: "snapback",
     onDrop: onDrop,
+    onDragStart: onDragStart,
   };
 
   var board = Chessboard("board", config);
