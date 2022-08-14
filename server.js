@@ -1,22 +1,53 @@
-import express from 'express';
-var app = express();
-var server = app.listen(process.env.PORT || 3000, '0.0.0.0');
-
-app.use(express.static('public'));
-console.log("Server is running on port " + process.env.PORT);
-
-// const game = import('./playChess.js');
-import playGame from './playChess.js';
-
+import express from "express";
+import alphabeta from "./chessAI.js";
 import { Server } from "socket.io";
+import { Chess } from "chess.js";
+
+var app = express();
+var server = app.listen(process.env.PORT || 3000, "0.0.0.0");
+
 const io = new Server(server);
-io.listen(8000);
 
-io.on('connection', (socket)=> {
+function setup() {
+  app.use(express.static("public"));
+  console.log("Server is running on port " + process.env.PORT);
+  var game = new Chess();
+  socketSetup(game);
+}
+
+function socketSetup(game) {
+  io.listen(8000);
+
+  io.on("connection", (socket) => {
     console.log("Connected with id", socket.id);
-    socket.on('movePiece', (move)=> {
-        console.log(move);
+    socket.on("move", (move) => {
+      makeMove(move, game);
+      socket.emit("boardUpdate", game.fen(), true);
     });
-});
 
-playGame();
+    socket.on("opponentMoveRequest", () => {
+        console.log("Requesting move");
+        makeAImove(game);
+        socket.emit("boardUpdate", game.fen(), false);
+      });
+  });
+}
+
+function makeMove(move, game) {
+  return game.move(move) != null;
+}
+
+function makeAImove(game) {
+    let move = alphabeta(game, 3, -Infinity, Infinity, false);
+    game.move(move.move);
+    console.log("Evaluation: " + move.score)
+}
+
+
+
+
+setup();
+
+
+//TODO: handle multiple boards
+//TODO: stop it from automatically making a move if it's not your turn
