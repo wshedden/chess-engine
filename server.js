@@ -5,30 +5,32 @@ import { Chess } from "chess.js";
 
 var app = express();
 var server = app.listen(process.env.PORT || 3000, "0.0.0.0");
+var games = Object();
 
 const io = new Server(server);
 
 function setup() {
   app.use(express.static("public"));
   console.log("Server is running on port " + process.env.PORT);
-  var game = new Chess();
-  socketSetup(game);
+  socketSetup();
 }
 
-function socketSetup(game) {
+function socketSetup() {
   io.listen(8000);
 
   io.on("connection", (socket) => {
     console.log("Connected with id", socket.id);
+    games[socket.id] = Chess();
+
     socket.on("move", (move) => {
-      let valid = makeMove(move, game);
-      socket.emit("boardUpdate", game.fen(), valid);
+      let valid = makeMove(move, games[socket.id]);
+      socket.emit("boardUpdate", games[socket.id].fen(), valid);
     });
 
     socket.on("opponentMoveRequest", () => {
         console.log("Requesting move");
-        makeAImove(game);
-        socket.emit("boardUpdate", game.fen(), false);
+        makeAImove(games[socket.id]);
+        socket.emit("boardUpdate", games[socket.id].fen(), false);
       });
   });
 }
@@ -49,6 +51,6 @@ function makeAImove(game) {
 setup();
 
 
-//TODO: handle multiple boards
+//DONE TODO: handle multiple boards
 //DONE TODO: stop it from automatically making a move if it's not your turn
 //TODO: handle checkmate
