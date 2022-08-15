@@ -1,5 +1,5 @@
 import express from "express";
-import alphabeta from "./chessAI.js";
+import calculateMove from "./chessAI.js";
 import { Server } from "socket.io";
 import { Chess } from "chess.js";
 
@@ -41,7 +41,8 @@ function makeMove(move, game) {
 }
 
 function makeAImove(game) {
-    let move = alphabeta(game, 3, -Infinity, Infinity, false);
+    let move = calculateMove(game);
+    
     game.move(move.move);
     console.log("Evaluation: " + move.score)
 }
