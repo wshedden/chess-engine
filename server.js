@@ -4,7 +4,8 @@ import { Server } from "socket.io";
 import { Chess } from "chess.js";
 
 var app = express();
-var server = app.listen(process.env.PORT || 3000, "0.0.0.0");
+const PORT = process.env.PORT || 3000;
+var server = app.listen(PORT, "0.0.0.0");
 var games = Object();
 
 const io = new Server(server);
